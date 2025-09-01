@@ -1,10 +1,6 @@
 package polars
 
 /*
-#cgo CFLAGS: -I${SRCDIR}
-#cgo linux LDFLAGS: -L${SRCDIR}/bin -lpolars_go -ldl -lm -lpthread
-#cgo darwin LDFLAGS: -L${SRCDIR}/bin -lpolars_go -framework CoreFoundation -framework Security
-#cgo windows LDFLAGS: -L${SRCDIR}/bin -lpolars_go -lws2_32 -luserenv -ladvapi32 -lkernel32
 #include "polars_go.h"
 #include <stdlib.h>
 */
@@ -167,11 +163,11 @@ func Col(name string) Expr {
 func (e Expr) Gt(value interface{}) Expr {
 	switch v := value.(type) {
 	case int:
-		return Expr{ptr: (*C.CExpr)(C.col_gt(e.ptr, C.long(v)))}
+		return Expr{ptr: (*C.CExpr)(C.col_gt(e.ptr, C.int64_t(v)))}
 	case int32:
-		return Expr{ptr: (*C.CExpr)(C.col_gt(e.ptr, C.long(v)))}
+		return Expr{ptr: (*C.CExpr)(C.col_gt(e.ptr, C.int64_t(v)))}
 	case int64:
-		return Expr{ptr: (*C.CExpr)(C.col_gt(e.ptr, C.long(v)))}
+		return Expr{ptr: (*C.CExpr)(C.col_gt(e.ptr, C.int64_t(v)))}
 	case float32:
 		return Expr{ptr: (*C.CExpr)(C.col_gt_f64(e.ptr, C.double(v)))}
 	case float64:
@@ -180,10 +176,8 @@ func (e Expr) Gt(value interface{}) Expr {
 		var intVal int64
 		if v {
 			intVal = 1
-		} else {
-			intVal = 0
 		}
-		return Expr{ptr: (*C.CExpr)(C.col_gt(e.ptr, C.long(intVal)))}
+		return Expr{ptr: (*C.CExpr)(C.col_gt(e.ptr, C.int64_t(intVal)))}
 	default:
 		panic("Gt: unsupported value type")
 	}
@@ -193,11 +187,11 @@ func (e Expr) Gt(value interface{}) Expr {
 func (e Expr) Lt(value interface{}) Expr {
 	switch v := value.(type) {
 	case int:
-		return Expr{ptr: (*C.CExpr)(C.col_lt(e.ptr, C.long(v)))}
+		return Expr{ptr: (*C.CExpr)(C.col_lt(e.ptr, C.int64_t(v)))}
 	case int32:
-		return Expr{ptr: (*C.CExpr)(C.col_lt(e.ptr, C.long(v)))}
+		return Expr{ptr: (*C.CExpr)(C.col_lt(e.ptr, C.int64_t(v)))}
 	case int64:
-		return Expr{ptr: (*C.CExpr)(C.col_lt(e.ptr, C.long(v)))}
+		return Expr{ptr: (*C.CExpr)(C.col_lt(e.ptr, C.int64_t(v)))}
 	case float32:
 		return Expr{ptr: (*C.CExpr)(C.col_lt_f64(e.ptr, C.double(v)))}
 	case float64:
@@ -206,10 +200,8 @@ func (e Expr) Lt(value interface{}) Expr {
 		var intVal int64
 		if v {
 			intVal = 1
-		} else {
-			intVal = 0
 		}
-		return Expr{ptr: (*C.CExpr)(C.col_lt(e.ptr, C.long(intVal)))}
+		return Expr{ptr: (*C.CExpr)(C.col_lt(e.ptr, C.int64_t(intVal)))}
 	default:
 		panic("Lt: unsupported value type")
 	}
@@ -219,11 +211,11 @@ func (e Expr) Lt(value interface{}) Expr {
 func (e Expr) Eq(value interface{}) Expr {
 	switch v := value.(type) {
 	case int:
-		return Expr{ptr: (*C.CExpr)(C.col_eq(e.ptr, C.long(v)))}
+		return Expr{ptr: (*C.CExpr)(C.col_eq(e.ptr, C.int64_t(v)))}
 	case int32:
-		return Expr{ptr: (*C.CExpr)(C.col_eq(e.ptr, C.long(v)))}
+		return Expr{ptr: (*C.CExpr)(C.col_eq(e.ptr, C.int64_t(v)))}
 	case int64:
-		return Expr{ptr: (*C.CExpr)(C.col_eq(e.ptr, C.long(v)))}
+		return Expr{ptr: (*C.CExpr)(C.col_eq(e.ptr, C.int64_t(v)))}
 	case float32:
 		return Expr{ptr: (*C.CExpr)(C.col_eq_f64(e.ptr, C.double(v)))}
 	case float64:
@@ -232,10 +224,8 @@ func (e Expr) Eq(value interface{}) Expr {
 		var intVal int64
 		if v {
 			intVal = 1
-		} else {
-			intVal = 0
 		}
-		return Expr{ptr: (*C.CExpr)(C.col_eq(e.ptr, C.long(intVal)))}
+		return Expr{ptr: (*C.CExpr)(C.col_eq(e.ptr, C.int64_t(intVal)))}
 	default:
 		panic("Eq: unsupported value type")
 	}
@@ -245,11 +235,11 @@ func (e Expr) Eq(value interface{}) Expr {
 func (e Expr) Ne(value interface{}) Expr {
 	switch v := value.(type) {
 	case int:
-		return Expr{ptr: (*C.CExpr)(C.col_ne(e.ptr, C.long(v)))}
+		return Expr{ptr: (*C.CExpr)(C.col_ne(e.ptr, C.int64_t(v)))}
 	case int32:
-		return Expr{ptr: (*C.CExpr)(C.col_ne(e.ptr, C.long(v)))}
+		return Expr{ptr: (*C.CExpr)(C.col_ne(e.ptr, C.int64_t(v)))}
 	case int64:
-		return Expr{ptr: (*C.CExpr)(C.col_ne(e.ptr, C.long(v)))}
+		return Expr{ptr: (*C.CExpr)(C.col_ne(e.ptr, C.int64_t(v)))}
 	case float32:
 		return Expr{ptr: (*C.CExpr)(C.col_ne_f64(e.ptr, C.double(v)))}
 	case float64:
@@ -258,10 +248,8 @@ func (e Expr) Ne(value interface{}) Expr {
 		var intVal int64
 		if v {
 			intVal = 1
-		} else {
-			intVal = 0
 		}
-		return Expr{ptr: (*C.CExpr)(C.col_ne(e.ptr, C.long(intVal)))}
+		return Expr{ptr: (*C.CExpr)(C.col_ne(e.ptr, C.int64_t(intVal)))}
 	default:
 		panic("Ne: unsupported value type")
 	}
@@ -271,11 +259,11 @@ func (e Expr) Ne(value interface{}) Expr {
 func (e Expr) Ge(value interface{}) Expr {
 	switch v := value.(type) {
 	case int:
-		return Expr{ptr: (*C.CExpr)(C.col_ge(e.ptr, C.long(v)))}
+		return Expr{ptr: (*C.CExpr)(C.col_ge(e.ptr, C.int64_t(v)))}
 	case int32:
-		return Expr{ptr: (*C.CExpr)(C.col_ge(e.ptr, C.long(v)))}
+		return Expr{ptr: (*C.CExpr)(C.col_ge(e.ptr, C.int64_t(v)))}
 	case int64:
-		return Expr{ptr: (*C.CExpr)(C.col_ge(e.ptr, C.long(v)))}
+		return Expr{ptr: (*C.CExpr)(C.col_ge(e.ptr, C.int64_t(v)))}
 	case float32:
 		return Expr{ptr: (*C.CExpr)(C.col_ge_f64(e.ptr, C.double(v)))}
 	case float64:
@@ -284,10 +272,8 @@ func (e Expr) Ge(value interface{}) Expr {
 		var intVal int64
 		if v {
 			intVal = 1
-		} else {
-			intVal = 0
 		}
-		return Expr{ptr: (*C.CExpr)(C.col_ge(e.ptr, C.long(intVal)))}
+		return Expr{ptr: (*C.CExpr)(C.col_ge(e.ptr, C.int64_t(intVal)))}
 	default:
 		panic("Ge: unsupported value type")
 	}
@@ -297,11 +283,11 @@ func (e Expr) Ge(value interface{}) Expr {
 func (e Expr) Le(value interface{}) Expr {
 	switch v := value.(type) {
 	case int:
-		return Expr{ptr: (*C.CExpr)(C.col_le(e.ptr, C.long(v)))}
+		return Expr{ptr: (*C.CExpr)(C.col_le(e.ptr, C.int64_t(v)))}
 	case int32:
-		return Expr{ptr: (*C.CExpr)(C.col_le(e.ptr, C.long(v)))}
+		return Expr{ptr: (*C.CExpr)(C.col_le(e.ptr, C.int64_t(v)))}
 	case int64:
-		return Expr{ptr: (*C.CExpr)(C.col_le(e.ptr, C.long(v)))}
+		return Expr{ptr: (*C.CExpr)(C.col_le(e.ptr, C.int64_t(v)))}
 	case float32:
 		return Expr{ptr: (*C.CExpr)(C.col_le_f64(e.ptr, C.double(v)))}
 	case float64:
@@ -310,10 +296,8 @@ func (e Expr) Le(value interface{}) Expr {
 		var intVal int64
 		if v {
 			intVal = 1
-		} else {
-			intVal = 0
 		}
-		return Expr{ptr: (*C.CExpr)(C.col_le(e.ptr, C.long(intVal)))}
+		return Expr{ptr: (*C.CExpr)(C.col_le(e.ptr, C.int64_t(intVal)))}
 	default:
 		panic("Le: unsupported value type")
 	}
@@ -413,11 +397,11 @@ func Lit(value interface{}) Expr {
 
 	switch v := value.(type) {
 	case int64:
-		cExpr = C.lit_int64(C.long(v))
+		cExpr = C.lit_int64(C.int64_t(v))
 	case int32:
 		cExpr = C.lit_int32(C.int(v))
 	case int:
-		cExpr = C.lit_int64(C.long(v)) // Treat as int64
+		cExpr = C.lit_int64(C.int64_t(v)) // Treat as int64
 	case float64:
 		cExpr = C.lit_float64(C.double(v))
 	case float32:
@@ -1059,4 +1043,89 @@ func (df *DataFrame) SortByExprs(exprs []Expr, descending []bool) *DataFrame {
 	}
 
 	return &DataFrame{ptr: (*C.CDataFrame)(sortedPtr)}
+}
+
+// DataType mirrors the Polars logical types exposed over FFI.
+type DataType int
+
+const (
+	DataTypeInvalid DataType = -1
+	DataTypeBoolean DataType = 0
+	DataTypeInt32   DataType = 1
+	DataTypeInt64   DataType = 2
+	DataTypeFloat32 DataType = 3
+	DataTypeFloat64 DataType = 4
+	DataTypeUTF8    DataType = 5
+)
+
+func (dt DataType) String() string {
+	switch dt {
+	case DataTypeBoolean:
+		return "Boolean"
+	case DataTypeInt32:
+		return "Int32"
+	case DataTypeInt64:
+		return "Int64"
+	case DataTypeFloat32:
+		return "Float32"
+	case DataTypeFloat64:
+		return "Float64"
+	case DataTypeUTF8:
+		return "Utf8"
+	default:
+		return "Invalid"
+	}
+}
+
+type ColumnSchema struct {
+	Name string
+	Type DataType
+}
+
+// Schema returns the schema of the DataFrame as a slice of ColumnSchema.
+func (df *DataFrame) Schema() []ColumnSchema {
+	if df == nil || df.ptr == nil || df.ptr.handle == nil {
+		return nil
+	}
+
+	width := df.Width()
+	schema := make([]ColumnSchema, 0, width)
+	for i := 0; i < width; i++ {
+		namePtr := C.dataframe_column_name(df.ptr, C.size_t(i))
+		if namePtr == nil {
+			break
+		}
+		name := C.GoString(namePtr)
+		C.free(unsafe.Pointer(namePtr))
+
+		typeTag := C.dataframe_column_dtype(df.ptr, C.size_t(i))
+		if typeTag == -1 {
+			continue
+		}
+
+		schema = append(schema, ColumnSchema{
+			Name: name,
+			Type: DataType(typeTag),
+		})
+	}
+
+	return schema
+}
+
+// Cast casts the expression to the specified data type.
+func (e Expr) Cast(dt DataType) Expr {
+	if e.ptr == nil {
+		return Expr{}
+	}
+
+	casted := C.expr_cast(e.ptr, C.int(dt))
+	if casted == nil {
+		err := C.GoString(C.get_last_error_message())
+		if err != "" {
+			log.Printf("cast error: %s", err)
+		}
+		return Expr{}
+	}
+
+	return Expr{ptr: (*C.CExpr)(casted)}
 }

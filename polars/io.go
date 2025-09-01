@@ -7,10 +7,6 @@ import (
 )
 
 /*
-#cgo CFLAGS: -I${SRCDIR}
-#cgo LDFLAGS: -L${SRCDIR}/bin -lpolars_go
-#cgo linux LDFLAGS: -Wl,-rpath=${SRCDIR}/bin
-#cgo darwin LDFLAGS: -Wl,-rpath,${SRCDIR}/bin
 #include "polars_go.h"
 #include <stdlib.h>
 */

@@ -8,6 +8,38 @@ use std::os::raw::c_char;
 use std::ptr;
 use std::rc::Rc;
 
+fn dtype_to_c_tag(dtype: &DataType) -> i32 {
+    match dtype {
+        DataType::Boolean => 0,
+        DataType::Int32 => 1,
+        DataType::Int64 => 2,
+        DataType::Float32 => 3,
+        DataType::Float64 => 4,
+        DataType::String => 5,
+        _ => -1,
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn dataframe_column_dtype(df: *const CDataFrame, index: usize) -> i32 {
+    unsafe {
+        match c_df_to_polars_df_ref(df) {
+            Ok(rc_df) => {
+                let df_ref = rc_df.borrow();
+                if index >= df_ref.width() {
+                    set_last_error("column index out of bounds");
+                    return -1;
+                }
+                dtype_to_c_tag(&df_ref.get_columns()[index].dtype())
+            }
+            Err(e) => {
+                set_last_error(&format!("schema error: {}", e));
+                -1
+            }
+        }
+    }
+}
+
 #[no_mangle]
 pub extern "C" fn read_csv(path: *const c_char) -> *mut CDataFrame {
     let c_str = unsafe { CStr::from_ptr(path) };

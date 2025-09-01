@@ -472,3 +472,36 @@ pub extern "C" fn col_le_f64(expr_ptr: *mut CExpr, value: f64) -> *mut CExpr {
         }
     }
 }
+
+fn c_int_to_dtype(tag: i32) -> Option<DataType> {
+    match tag {
+        0 => Some(DataType::Boolean),
+        1 => Some(DataType::Int32),
+        2 => Some(DataType::Int64),
+        3 => Some(DataType::Float32),
+        4 => Some(DataType::Float64),
+        5 => Some(DataType::String),
+        _ => None,
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn expr_cast(expr_ptr: *mut CExpr, dtype: i32) -> *mut CExpr {
+    unsafe {
+        let expr_result = c_expr_to_expr(expr_ptr);
+        match (expr_result, c_int_to_dtype(dtype)) {
+            (Ok(expr), Some(dt)) => {
+                let new_expr = expr.cast(dt);
+                expr_to_c_expr(new_expr)
+            }
+            (Err(e), _) => {
+                *LAST_ERROR.lock().unwrap() = Some(e);
+                ptr::null_mut()
+            }
+            (_, None) => {
+                *LAST_ERROR.lock().unwrap() = Some("Unsupported data type".into());
+                ptr::null_mut()
+            }
+        }
+    }
+}

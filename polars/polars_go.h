@@ -111,4 +111,18 @@ typedef enum {
 extern CDataFrame* join_dataframes(CDataFrame* left_df, CDataFrame* right_df, const char* left_on, const char* right_on, CJoinType join_type);
 extern CDataFrame* join_dataframes_multiple_keys(CDataFrame* left_df, CDataFrame* right_df, const char* left_on, const char* right_on, CJoinType join_type);
 
+// Data type enum for casting and schema inspection
+typedef enum {
+    DATA_TYPE_INVALID = -1,
+    DATA_TYPE_BOOLEAN = 0,
+    DATA_TYPE_INT32 = 1,
+    DATA_TYPE_INT64 = 2,
+    DATA_TYPE_FLOAT32 = 3,
+    DATA_TYPE_FLOAT64 = 4,
+    DATA_TYPE_UTF8 = 5,
+} CDataType;
+
+extern CExpr* expr_cast(CExpr* expr, int32_t data_type);
+extern int32_t dataframe_column_dtype(const CDataFrame* df, size_t index);
+
 #endif
