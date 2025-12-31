@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 
-	"github.com/jordandelbar/go-polars/polars"
+	pl "github.com/jordandelbar/go-polars/polars"
 )
 
-func printSchema(df *polars.DataFrame, label string) {
+func printSchema(df *pl.DataFrame, label string) {
 	fmt.Printf("%s schema:\n", label)
 	for _, col := range df.Schema() {
 		fmt.Printf("  %-15s %s\n", col.Name, col.Type)
@@ -15,7 +15,7 @@ func printSchema(df *polars.DataFrame, label string) {
 }
 
 func main() {
-	irisDf, err := polars.ReadCSV("../data/iris.csv")
+	irisDf, err := pl.ReadCSV("../data/iris.csv")
 	if err != nil {
 		panic(err)
 	}
@@ -23,7 +23,7 @@ func main() {
 	printSchema(irisDf, "original")
 
 	casted := irisDf.WithColumns(
-		polars.Col("petal.length").Cast(polars.DataTypeUTF8).Alias("petal_length_utf8"),
+		pl.Col("petal.length").Cast(pl.DataTypeUTF8).Alias("petal_length_utf8"),
 	)
 
 	printSchema(casted, "after cast")
