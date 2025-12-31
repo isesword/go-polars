@@ -50,10 +50,6 @@ func Ensure(opts Options) error {
 		return fmt.Errorf("create bin dir: %w", err)
 	}
 
-	platform, err := hostPlatform()
-	if err != nil {
-		return err
-	}
 	osTag, archTag, err := runnerStylePlatform()
 	if err != nil {
 		return err
@@ -113,27 +109,6 @@ func versionFromEnv() string {
 		return v
 	}
 	return defaultVersion
-}
-
-func hostPlatform() (string, error) {
-	switch runtime.GOOS {
-	case "linux":
-		if runtime.GOARCH == "amd64" {
-			return "linux-amd64", nil
-		}
-	case "darwin":
-		switch runtime.GOARCH {
-		case "arm64":
-			return "darwin-arm64", nil
-		case "amd64":
-			return "darwin-amd64", nil
-		}
-	case "windows":
-		if runtime.GOARCH == "amd64" {
-			return "windows-amd64", nil
-		}
-	}
-	return "", fmt.Errorf("unsupported platform %s/%s", runtime.GOOS, runtime.GOARCH)
 }
 
 // runnerStylePlatform returns OS/arch tags used by CI artifact naming, e.g. Linux-X64 or macOS-ARM64.
