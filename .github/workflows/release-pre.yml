@@ -2,8 +2,8 @@ name: Pre-Release
 
 on:
   push:
-    branches:
-      - esword
+    # branches:
+    #   - esword
     tags:
       - "pre/**"
 
