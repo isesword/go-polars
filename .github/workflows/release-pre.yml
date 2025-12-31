@@ -1,0 +1,46 @@
+name: Pre-Release
+
+on:
+  push:
+    branches:
+      - esword
+    tags:
+      - "pre/**"
+
+jobs:
+  prerelease:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.25.x"
+
+      - name: Install make (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: choco install make
+
+      - name: Build
+        shell: bash
+        run: ./build.sh --force
+
+      - name: Create pre-release and upload assets
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: true
+          files: |
+            polars/bin/libpolars_go.a
+            polars/bin/polars_go.lib
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
