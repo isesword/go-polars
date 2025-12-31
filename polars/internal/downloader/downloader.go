@@ -17,7 +17,7 @@ import (
 
 const (
 	defaultVersion = "v0.0.26"
-	defaultRepo    = "jordandelbar/go-polars"
+	defaultRepo    = "isesword/go-polars"
 )
 
 // Options configures Ensure.
@@ -54,6 +54,10 @@ func Ensure(opts Options) error {
 	if err != nil {
 		return err
 	}
+	osTag, archTag, err := runnerStylePlatform()
+	if err != nil {
+		return err
+	}
 
 	binName := binaryName()
 	targetPath := filepath.Join(opts.BinDir, binName)
@@ -63,7 +67,7 @@ func Ensure(opts Options) error {
 		return nil
 	}
 
-	assetName := fmt.Sprintf("libpolars_go-%s-%s.a", platform, opts.Version)
+	assetName := assetFilename(osTag, archTag)
 	assetURL := fmt.Sprintf("%s/%s/%s", opts.BaseURL, opts.Version, assetName)
 	checksumURL := assetURL + ".sha256"
 
@@ -82,9 +86,12 @@ func Ensure(opts Options) error {
 	if !opts.SkipVerify {
 		checksum, err := fetchChecksum(client, checksumURL)
 		if err != nil {
-			return err
-		}
-		if err := verifyFile(tmpFile.Name(), checksum); err != nil {
+			if errors.Is(err, errChecksumMissing) {
+				fmt.Printf("ℹ️  checksum missing, skipping verify\n")
+			} else {
+				return err
+			}
+		} else if err := verifyFile(tmpFile.Name(), checksum); err != nil {
 			return err
 		}
 	}
@@ -127,6 +134,40 @@ func hostPlatform() (string, error) {
 		}
 	}
 	return "", fmt.Errorf("unsupported platform %s/%s", runtime.GOOS, runtime.GOARCH)
+}
+
+// runnerStylePlatform returns OS/arch tags used by CI artifact naming, e.g. Linux-X64 or macOS-ARM64.
+func runnerStylePlatform() (string, string, error) {
+	var osTag, archTag string
+	switch runtime.GOOS {
+	case "linux":
+		osTag = "Linux"
+	case "darwin":
+		osTag = "macOS"
+	case "windows":
+		osTag = "Windows"
+	default:
+		return "", "", fmt.Errorf("unsupported OS %s", runtime.GOOS)
+	}
+
+	switch runtime.GOARCH {
+	case "amd64":
+		archTag = "X64"
+	case "arm64":
+		archTag = "ARM64"
+	default:
+		return "", "", fmt.Errorf("unsupported arch %s", runtime.GOARCH)
+	}
+
+	return osTag, archTag, nil
+}
+
+// assetFilename builds the release asset name matching CI uploads.
+func assetFilename(osTag, archTag string) string {
+	if runtime.GOOS == "windows" {
+		return fmt.Sprintf("polars_go-%s-%s.lib", osTag, archTag)
+	}
+	return fmt.Sprintf("libpolars_go-%s-%s.a", osTag, archTag)
 }
 
 func binaryName() string {
@@ -172,6 +213,8 @@ func downloadTo(client *http.Client, url string, dst *os.File) error {
 	return nil
 }
 
+var errChecksumMissing = errors.New("checksum missing")
+
 func fetchChecksum(client *http.Client, url string) (string, error) {
 	resp, err := client.Get(url)
 	if err != nil {
@@ -179,6 +222,9 @@ func fetchChecksum(client *http.Client, url string) (string, error) {
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode == http.StatusNotFound {
+		return "", errChecksumMissing
+	}
 	if resp.StatusCode != http.StatusOK {
 		return "", fmt.Errorf("checksum request failed: %s", resp.Status)
 	}
