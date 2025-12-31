@@ -35,12 +35,20 @@ jobs:
         shell: bash
         run: ./build.sh --force
 
-      - name: Create pre-release and upload assets
+      - name: Upload pre-release asset (Linux/macOS)
+        if: runner.os != 'Windows'
         uses: softprops/action-gh-release@v1
         with:
           prerelease: true
-          files: |
-            polars/bin/libpolars_go.a
-            polars/bin/polars_go.lib
+          files: polars/bin/libpolars_go.a#libpolars_go-${{ runner.os }}-${{ runner.arch }}.a
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload pre-release asset (Windows)
+        if: runner.os == 'Windows'
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: true
+          files: polars/bin/polars_go.lib#polars_go-${{ runner.os }}-${{ runner.arch }}.lib
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
