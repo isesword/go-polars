@@ -35,12 +35,37 @@ jobs:
         shell: bash
         run: ./build.sh --force
 
+      - name: Verify artifact path (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: |
+          ls -l polars/bin || true
+          test -f polars/bin/libpolars_go.a
+
+      - name: Rename artifact with platform suffix (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: |
+          cp polars/bin/libpolars_go.a polars/bin/libpolars_go-${{ runner.os }}-${{ runner.arch }}.a
+
+      - name: Verify artifact path (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Get-ChildItem polars/bin
+          if (-not (Test-Path polars/bin/polars_go.lib)) { exit 1 }
+
+      - name: Rename artifact with platform suffix (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Copy-Item polars/bin/polars_go.lib polars/bin/polars_go-${{ runner.os }}-${{ runner.arch }}.lib -Force
+
       - name: Upload pre-release asset (Linux/macOS)
         if: runner.os != 'Windows'
         uses: softprops/action-gh-release@v1
         with:
           prerelease: true
-          files: polars/bin/libpolars_go.a#libpolars_go-${{ runner.os }}-${{ runner.arch }}.a
+          fail_on_unmatched_files: true
+          files: polars/bin/libpolars_go-${{ runner.os }}-${{ runner.arch }}.a
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -49,6 +74,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           prerelease: true
-          files: polars/bin/polars_go.lib#polars_go-${{ runner.os }}-${{ runner.arch }}.lib
+          fail_on_unmatched_files: true
+          files: polars/bin/polars_go-${{ runner.os }}-${{ runner.arch }}.lib
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
