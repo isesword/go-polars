@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	defaultVersion = "v0.0.26"
+	defaultVersion = "v0.1.0-rc4"
 	defaultRepo    = "isesword/go-polars"
 )
 
@@ -35,9 +35,6 @@ func Ensure(opts Options) error {
 	if opts.Version == "" {
 		opts.Version = versionFromEnv()
 	}
-	if opts.BinDir == "" {
-		opts.BinDir = "polars/bin"
-	}
 	if opts.BaseURL == "" {
 		opts.BaseURL = fmt.Sprintf("https://github.com/%s/releases/download", defaultRepo)
 	}
@@ -46,13 +43,17 @@ func Ensure(opts Options) error {
 		client = &http.Client{Timeout: 2 * time.Minute}
 	}
 
-	if err := os.MkdirAll(opts.BinDir, 0o755); err != nil {
-		return fmt.Errorf("create bin dir: %w", err)
-	}
-
 	osTag, archTag, err := runnerStylePlatform()
 	if err != nil {
 		return err
+	}
+
+	if opts.BinDir == "" {
+		opts.BinDir = defaultBinDir(opts.Version, osTag, archTag)
+	}
+
+	if err := os.MkdirAll(opts.BinDir, 0o755); err != nil {
+		return fmt.Errorf("create bin dir: %w", err)
 	}
 
 	binName := binaryName()
@@ -109,6 +110,23 @@ func versionFromEnv() string {
 		return v
 	}
 	return defaultVersion
+}
+
+// defaultBinDir chooses the target directory for the downloaded library.
+// Priority:
+// 1) POLARS_BIN_DIR (explicit override)
+// 2) User cache: <cache>/go-polars/<version>/<os>-<arch>
+// 3) Fallback to repo-local polars/bin when cache path is unavailable.
+func defaultBinDir(version, osTag, archTag string) string {
+	if dir := os.Getenv("POLARS_BIN_DIR"); dir != "" {
+		return dir
+	}
+
+	if cacheRoot, err := os.UserCacheDir(); err == nil {
+		return filepath.Join(cacheRoot, "go-polars", version, fmt.Sprintf("%s-%s", osTag, archTag))
+	}
+
+	return "polars/bin"
 }
 
 // runnerStylePlatform returns OS/arch tags used by CI artifact naming, e.g. Linux-X64 or macOS-ARM64.
