@@ -96,6 +96,7 @@ func Ensure(opts Options) error {
 	if err := copyFile(tmpFile.Name(), targetPath); err != nil {
 		return err
 	}
+	mirrorIntoRepoBin(binName, targetPath, opts.BinDir)
 
 	if err := os.WriteFile(statePath, []byte(opts.Version), 0o644); err != nil {
 		return fmt.Errorf("write version state: %w", err)
@@ -280,4 +281,18 @@ func copyFile(src, dst string) error {
 	}
 
 	return nil
+}
+
+// mirrorIntoRepoBin best-effort copies the downloaded lib into repo-local polars/bin
+// so cgo's default -L${SRCDIR}/bin still succeeds when POLARS_BIN_DIR points elsewhere.
+func mirrorIntoRepoBin(binName, targetPath, binDir string) {
+	repoBin := filepath.Join("polars", "bin")
+	if binDir == repoBin {
+		return
+	}
+	repoPath := filepath.Join(repoBin, binName)
+	if err := os.MkdirAll(repoBin, 0o755); err != nil {
+		return
+	}
+	_ = copyFile(targetPath, repoPath)
 }
