@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	"github.com/jordandelbar/go-polars/polars"
+	"github.com/isesword/go-polars/polars"
 )
 
 // Test basic join operations

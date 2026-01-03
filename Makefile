@@ -62,7 +62,7 @@ test-bench: quick-build
 .PHONY: test-coverage
 test-coverage: quick-build
 	@echo "📈 Running tests with coverage..."
-	@cd tests && go test -v -coverprofile=coverage.out -coverpkg=github.com/jordandelbar/go-polars/polars
+	@cd tests && go test -v -coverprofile=coverage.out -coverpkg=github.com/isesword/go-polars/polars
 	@cd tests && go tool cover -html=coverage.out -o coverage.html
 	@echo "📊 Coverage report generated: tests/coverage.html"
 	@cd tests && go tool cover -func=coverage.out

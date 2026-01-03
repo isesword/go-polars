@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/jordandelbar/go-polars/polars"
+	"github.com/isesword/go-polars/polars"
 )
 
 // Test CSV I/O operations
