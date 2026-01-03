@@ -96,7 +96,6 @@ func Ensure(opts Options) error {
 	if err := copyFile(tmpFile.Name(), targetPath); err != nil {
 		return err
 	}
-	mirrorIntoRepoBin(binName, targetPath, opts.BinDir)
 
 	if err := os.WriteFile(statePath, []byte(opts.Version), 0o644); err != nil {
 		return fmt.Errorf("write version state: %w", err)
@@ -117,7 +116,7 @@ func versionFromEnv() string {
 // Priority:
 // 1) POLARS_BIN_DIR (explicit override)
 // 2) User cache: <cache>/go-polars/<version>/<os>-<arch>
-// 3) Fallback to repo-local polars/bin when cache path is unavailable.
+// 3) Fallback to repo-local polars/libs when cache path is unavailable.
 func defaultBinDir(version, osTag, archTag string) string {
 	if dir := os.Getenv("POLARS_BIN_DIR"); dir != "" {
 		return dir
@@ -127,7 +126,7 @@ func defaultBinDir(version, osTag, archTag string) string {
 		return filepath.Join(cacheRoot, "go-polars", version, fmt.Sprintf("%s-%s", osTag, archTag))
 	}
 
-	return "polars/bin"
+	return filepath.Join("polars", "libs")
 }
 
 // runnerStylePlatform returns OS/arch tags used by CI artifact naming, e.g. Linux-X64 or macOS-ARM64.
@@ -157,16 +156,17 @@ func runnerStylePlatform() (string, string, error) {
 }
 
 // assetFilename builds the release asset name matching CI uploads.
+// Always uses base name libpolars_go with OS/arch suffix; extension varies by platform.
 func assetFilename(osTag, archTag string) string {
 	if runtime.GOOS == "windows" {
-		return fmt.Sprintf("polars_go-%s-%s.lib", osTag, archTag)
+		return fmt.Sprintf("libpolars_go-%s-%s.lib", osTag, archTag)
 	}
 	return fmt.Sprintf("libpolars_go-%s-%s.a", osTag, archTag)
 }
 
 func binaryName() string {
 	if runtime.GOOS == "windows" {
-		return "polars_go.lib"
+		return "libpolars_go.lib"
 	}
 	return "libpolars_go.a"
 }
@@ -281,18 +281,4 @@ func copyFile(src, dst string) error {
 	}
 
 	return nil
-}
-
-// mirrorIntoRepoBin best-effort copies the downloaded lib into repo-local polars/bin
-// so cgo's default -L${SRCDIR}/bin still succeeds when POLARS_BIN_DIR points elsewhere.
-func mirrorIntoRepoBin(binName, targetPath, binDir string) {
-	repoBin := filepath.Join("polars", "bin")
-	if binDir == repoBin {
-		return
-	}
-	repoPath := filepath.Join(repoBin, binName)
-	if err := os.MkdirAll(repoBin, 0o755); err != nil {
-		return
-	}
-	_ = copyFile(targetPath, repoPath)
 }
