@@ -6,7 +6,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/jordandelbar/go-polars/polars"
+	"github.com/isesword/go-polars/polars"
 )
 
 func TestMain(m *testing.M) {

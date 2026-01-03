@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	pl "github.com/jordandelbar/go-polars/polars"
+	pl "github.com/isesword/go-polars/polars"
 )
 
 func main() {

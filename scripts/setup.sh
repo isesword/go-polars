@@ -4,9 +4,9 @@ set -e
 
 # go-polars Complete Setup Script
 # This script sets up go-polars in your Go project with the precompiled binary
-# Usage: curl -sSL https://raw.githubusercontent.com/jordandelbar/go-polars/main/scripts/setup.sh | sh
+# Usage: curl -sSL https://raw.githubusercontent.com/isesword/go-polars/main/scripts/setup.sh | sh
 
-REPO="jordandelbar/go-polars"
+REPO="isesword/go-polars"
 DEFAULT_VERSION="v0.0.26"
 BINARY_NAME="libpolars_go.a"
 
@@ -58,8 +58,8 @@ while [ $# -gt 0 ]; do
             echo ""
             echo "This script sets up go-polars in your Go project with the precompiled binary."
             echo ""
-            echo "Usage: curl -sSL https://raw.githubusercontent.com/jordandelbar/go-polars/main/scripts/setup.sh | sh"
-            echo "   Or: curl -sSL https://raw.githubusercontent.com/jordandelbar/go-polars/main/scripts/setup.sh | sh -s -- [options]"
+            echo "Usage: curl -sSL https://raw.githubusercontent.com/isesword/go-polars/main/scripts/setup.sh | sh"
+            echo "   Or: curl -sSL https://raw.githubusercontent.com/isesword/go-polars/main/scripts/setup.sh | sh -s -- [options]"
             echo ""
             echo "Options:"
             echo "  --version VERSION    Install specific version (default: $DEFAULT_VERSION)"
@@ -69,10 +69,10 @@ while [ $# -gt 0 ]; do
             echo ""
             echo "Examples:"
             echo "  # Set up latest version"
-            echo "  curl -sSL https://raw.githubusercontent.com/jordandelbar/go-polars/main/scripts/setup.sh | sh"
+            echo "  curl -sSL https://raw.githubusercontent.com/isesword/go-polars/main/scripts/setup.sh | sh"
             echo ""
             echo "  # Set up specific version"
-            echo "  curl -sSL https://raw.githubusercontent.com/jordandelbar/go-polars/main/scripts/setup.sh | sh -s -- --version v0.0.22"
+            echo "  curl -sSL https://raw.githubusercontent.com/isesword/go-polars/main/scripts/setup.sh | sh -s -- --version v0.0.22"
             echo ""
             echo "Requirements:"
             echo "  - Run from your Go project root directory"
@@ -331,7 +331,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/jordandelbar/go-polars/polars"
+	"github.com/isesword/go-polars/polars"
 )
 
 func main() {

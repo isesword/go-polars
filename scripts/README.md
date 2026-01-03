@@ -10,7 +10,7 @@ The complete setup script that handles everything needed to get go-polars workin
 
 **Usage:**
 ```bash
-curl -sSL https://raw.githubusercontent.com/jordandelbar/go-polars/main/scripts/setup.sh | sh
+curl -sSL https://raw.githubusercontent.com/isesword/go-polars/main/scripts/setup.sh | sh
 ```
 
 **What it does:**
@@ -37,7 +37,7 @@ Downloads only the precompiled binary to your current project.
 
 **Usage:**
 ```bash
-curl -sSL https://raw.githubusercontent.com/jordandelbar/go-polars/main/scripts/install.sh | sh
+curl -sSL https://raw.githubusercontent.com/isesword/go-polars/main/scripts/install.sh | sh
 ```
 
 **What it does:**
@@ -61,7 +61,7 @@ Currently, precompiled binaries are available for:
 
 For other platforms, you'll need to build from source:
 ```bash
-git clone https://github.com/jordandelbar/go-polars.git
+git clone https://github.com/isesword/go-polars.git
 cd go-polars
 ./build.sh
 ```
@@ -83,24 +83,24 @@ The scripts automatically verify checksums unless `--skip-verify` is used.
 ```bash
 mkdir my-polars-project
 cd my-polars-project
-curl -sSL https://raw.githubusercontent.com/jordandelbar/go-polars/main/scripts/setup.sh | sh
+curl -sSL https://raw.githubusercontent.com/isesword/go-polars/main/scripts/setup.sh | sh
 go run example.go
 ```
 
 ### Install Specific Version
 ```bash
-curl -sSL https://raw.githubusercontent.com/jordandelbar/go-polars/main/scripts/setup.sh | sh -s -- --version v0.0.21
+curl -sSL https://raw.githubusercontent.com/isesword/go-polars/main/scripts/setup.sh | sh -s -- --version v0.0.21
 ```
 
 ### Force Reinstall
 ```bash
-curl -sSL https://raw.githubusercontent.com/jordandelbar/go-polars/main/scripts/setup.sh | sh -s -- --force
+curl -sSL https://raw.githubusercontent.com/isesword/go-polars/main/scripts/setup.sh | sh -s -- --force
 ```
 
 ### Binary Only (for existing projects)
 ```bash
 cd my-existing-project
-curl -sSL https://raw.githubusercontent.com/jordandelbar/go-polars/main/scripts/install.sh | sh
+curl -sSL https://raw.githubusercontent.com/isesword/go-polars/main/scripts/install.sh | sh
 ```
 
 ## Troubleshooting
@@ -112,7 +112,7 @@ curl -sSL https://raw.githubusercontent.com/jordandelbar/go-polars/main/scripts/
 
 ### "Unsupported platform"
 - Build from source using `./build.sh`
-- Check the [releases page](https://github.com/jordandelbar/go-polars/releases) for available platforms
+- Check the [releases page](https://github.com/isesword/go-polars/releases) for available platforms
 
 ### "Module not found" errors
 - Ensure you're in your Go project directory

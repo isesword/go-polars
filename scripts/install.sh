@@ -3,10 +3,10 @@
 set -e
 
 # go-polars Installation Script
-# Usage: curl -sSL https://raw.githubusercontent.com/jordandelbar/go-polars/main/scripts/install.sh | sh
-# Or: curl -sSL https://raw.githubusercontent.com/jordandelbar/go-polars/main/scripts/install.sh | sh -s -- --version v0.0.22
+# Usage: curl -sSL https://raw.githubusercontent.com/isesword/go-polars/main/scripts/install.sh | sh
+# Or: curl -sSL https://raw.githubusercontent.com/isesword/go-polars/main/scripts/install.sh | sh -s -- --version v0.0.22
 
-REPO="jordandelbar/go-polars"
+REPO="isesword/go-polars"
 DEFAULT_VERSION="v0.0.25"
 INSTALL_DIR="polars/bin"
 BINARY_NAME="libpolars_go.a"
@@ -57,8 +57,8 @@ while [ $# -gt 0 ]; do
         --help|-h)
             echo "go-polars Installation Script"
             echo ""
-            echo "Usage: curl -sSL https://raw.githubusercontent.com/jordandelbar/go-polars/main/scripts/install.sh | sh"
-            echo "   Or: curl -sSL https://raw.githubusercontent.com/jordandelbar/go-polars/main/scripts/install.sh | sh -s -- [options]"
+            echo "Usage: curl -sSL https://raw.githubusercontent.com/isesword/go-polars/main/scripts/install.sh | sh"
+            echo "   Or: curl -sSL https://raw.githubusercontent.com/isesword/go-polars/main/scripts/install.sh | sh -s -- [options]"
             echo ""
             echo "Options:"
             echo "  --version VERSION    Install specific version (default: $DEFAULT_VERSION)"
@@ -68,13 +68,13 @@ while [ $# -gt 0 ]; do
             echo ""
             echo "Examples:"
             echo "  # Install latest version in current project"
-            echo "  curl -sSL https://raw.githubusercontent.com/jordandelbar/go-polars/main/scripts/install.sh | sh"
+            echo "  curl -sSL https://raw.githubusercontent.com/isesword/go-polars/main/scripts/install.sh | sh"
             echo ""
             echo "  # Install specific version"
-            echo "  curl -sSL https://raw.githubusercontent.com/jordandelbar/go-polars/main/scripts/install.sh | sh -s -- --version v0.0.22"
+            echo "  curl -sSL https://raw.githubusercontent.com/isesword/go-polars/main/scripts/install.sh | sh -s -- --version v0.0.22"
             echo ""
             echo "  # Force reinstall"
-            echo "  curl -sSL https://raw.githubusercontent.com/jordandelbar/go-polars/main/scripts/install.sh | sh -s -- --force"
+            echo "  curl -sSL https://raw.githubusercontent.com/isesword/go-polars/main/scripts/install.sh | sh -s -- --force"
             echo ""
             echo "Note: This script installs the library in your current project directory."
             echo "      Run this from the root of your Go project where you want to use go-polars."
